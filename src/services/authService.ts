@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"; 
-import { IUser } from "../types/userTypes";
+import { IUser } from "../types/@Types";
+import { createTransaction } from "./transactionsService";
 
 const prisma = new PrismaClient();
 
@@ -136,6 +137,13 @@ export const addBalance = async (userId: string, amount: number) => {
         },
     });
 
+    // Registrando a transação como depósito
+    await createTransaction({
+        userId,
+        type: 'deposit',
+        amount,
+    });
+
     return updatedUser;
 };
 
@@ -180,6 +188,21 @@ export const transferBalance = async (fromUserId: string, toAccountNumber: strin
         },
     });
 
+    // Registrando a transação para o remetente
+    await createTransaction({
+        userId: fromUserId,
+        type: 'transfer',
+        amount,
+        toAccount: toAccountNumber,
+    });
+
+    // Registrando a transação para o destinatário
+    await createTransaction({
+        userId: toUser.id,
+        type: 'deposit',
+        amount,
+    });
+
     return { updatedFromUser, updatedToUser };
 };
 
@@ -204,12 +227,19 @@ export const withdraw = async (id: string, amount: number) => {
         throw new Error("Saldo insuficiente.");
     }
 
-    // Subtrair o valor do saldo
+    // Subtraindo o valor do saldo
     const updatedUser = await prisma.user.update({
         where: { id },
         data: {
             balance: user.balance - amount,
         },
+    });
+
+    // Registrando a transação como saque
+    await createTransaction({
+        userId: id,
+        type: 'withdraw',
+        amount,
     });
 
     return updatedUser;
