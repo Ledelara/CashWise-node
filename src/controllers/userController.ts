@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { addBalance, transferBalance, updateUser, withdraw } from '../services/authService';
+import { createTransaction, getUserStatement } from "../services/transactionsService";
 
 export const depositAmount = async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -39,7 +40,9 @@ export const withdrawAmount = async (req: Request, res: Response) => {
 // Handler para transação
 export const handleTransaction = async (req: Request, res: Response): Promise<void> => {
     try {
-        res.status(200).json({ message: 'Transação realizada com sucesso' });
+        const { userId, type, amount, toAccount } = req.body;
+        const transactionCreated = await createTransaction({ userId, type, amount, toAccount });
+        res.status(200).json(transactionCreated);   
     } catch (error) {
         res.status(500).json({ error: 'Erro ao processar transação' });
     }
@@ -49,7 +52,8 @@ export const handleTransaction = async (req: Request, res: Response): Promise<vo
 export const getStatement = async (req: Request, res: Response): Promise<void> => {
     try {
         const { userId } = req.params;
-        res.status(200).json({ message: `Extrato do usuário ${userId}` });
+        const userStatement = await getUserStatement(userId);
+        res.status(200).json(userStatement);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao obter extrato' });
     }
