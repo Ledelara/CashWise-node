@@ -3,7 +3,7 @@ import { depositAmount, getStatement, handleTransaction, transferAmount, withdra
 
 const router = express.Router();
 
-router.get('/statement/:userId', getStatement);
+router.get('/user/statement/:userId', getStatement);
 router.post('/user/:id/deposit', depositAmount);
 router.post('user/transfer', transferAmount);
 router.post('/user/transaction', handleTransaction);
