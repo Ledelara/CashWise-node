@@ -114,3 +114,71 @@ export const deleteUser = async (userId: string) => {
     return deletedUser;
 };
 
+// Função para adicionar saldo
+export const addBalance = async (userId: string, amount: number) => {
+    if (amount <= 0) {
+        throw new Error("O valor deve ser positivo.");
+    }
+
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+    });
+
+    if (!user) {
+        throw new Error("Usuário não encontrado.");
+    }
+
+    // Atualizando o saldo do usuário
+    const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+            balance: user.balance + amount,
+        },
+    });
+
+    return updatedUser;
+};
+
+// Função para transferir saldo
+export const transferBalance = async (fromUserId: string, toAccountNumber: string, amount: number) => {
+    if (amount <= 0) {
+        throw new Error("O valor da transferência deve ser positivo.");
+    }
+
+    const fromUser = await prisma.user.findUnique({
+        where: { id: fromUserId },
+    });
+
+    if (!fromUser) {
+        throw new Error("Usuário de origem não encontrado.");
+    }
+
+    if (fromUser.balance < amount) {
+        throw new Error("Saldo insuficiente.");
+    }
+
+    const toUser = await prisma.user.findUnique({
+        where: { accountNumber: toAccountNumber },
+    });
+
+    if (!toUser) {
+        throw new Error("Usuário de destino não encontrado.");
+    }
+
+    // Realizando a transferência
+    const updatedFromUser = await prisma.user.update({
+        where: { id: fromUserId },
+        data: {
+            balance: fromUser.balance - amount,
+        },
+    });
+
+    const updatedToUser = await prisma.user.update({
+        where: { accountNumber: toAccountNumber },
+        data: {
+            balance: toUser.balance + amount,
+        },
+    });
+
+    return { updatedFromUser, updatedToUser };
+};
