@@ -36,7 +36,7 @@ Este é um projeto de API para um aplicativo de banco, desenvolvido com Node.js,
 1. Clone o repositório:
 
    ```bash
-   git clone https://github.com/your-repo/bank-api.git
+   git clone https://github.com/Ledelara/CashWise-node.git
 
 2. Instale as dependências
 
