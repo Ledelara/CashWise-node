@@ -182,3 +182,35 @@ export const transferBalance = async (fromUserId: string, toAccountNumber: strin
 
     return { updatedFromUser, updatedToUser };
 };
+
+// Função para sacar saldo
+export const withdraw = async (id: string, amount: number) => {
+    // Verificar se o valor do saque é válido
+    if (amount <= 0) {
+        throw new Error("O valor do saque deve ser maior que zero.");
+    }
+
+    // Buscar o usuário no banco de dados
+    const user = await prisma.user.findUnique({
+        where: { id },
+    });
+
+    if (!user) {
+        throw new Error("Usuário não encontrado.");
+    }
+
+    // Verificar se o saldo é suficiente para o saque
+    if (user.balance < amount) {
+        throw new Error("Saldo insuficiente.");
+    }
+
+    // Subtrair o valor do saldo
+    const updatedUser = await prisma.user.update({
+        where: { id },
+        data: {
+            balance: user.balance - amount,
+        },
+    });
+
+    return updatedUser;
+};
