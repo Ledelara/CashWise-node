@@ -1,4 +1,4 @@
-# Bank API - Node.js, Prisma, Express, MongoDB, TypeScript
+# CashWise API - Node.js, Prisma, Express, MongoDB, TypeScript
 
 Este é um projeto de API para um aplicativo de banco, desenvolvido com Node.js, Prisma, Express, MongoDB e TypeScript. Ele permite o gerenciamento de usuários, login, transações financeiras como depósitos, saques e transferências, além de autenticação e proteção de rotas.
 
