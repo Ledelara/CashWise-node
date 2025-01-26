@@ -6,3 +6,9 @@ export interface IUser {
     balance?: number;
     accountNumber?: string;
 }
+export interface ITransaction {
+    userId: string, 
+    type: 'deposit' | 'withdraw' | 'transfer' | string,
+    amount: number, 
+    toAccount?: string
+}
