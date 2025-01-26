@@ -65,5 +65,52 @@ export const loginUser = async (email: string, password: string) => {
     );
 
     return { token, userId: user.id, name: user.name, email: user.email };
-};  
+}; 
+
+export const updateUser = async (userId: string, userData: IUser) => {
+    const { name, email, password, transactionPassword } = userData;
+
+    // Verificando se o usuário existe
+    const user = await prisma.user.findUnique({
+        where: { id: userId }
+    });
+
+    if (!user) {
+        throw new Error("Usuário não encontrado");
+    };
+
+    // Criptografando as senhas se elas forem fornecidas
+    const hashedPassword = password ? await bcrypt.hash(password, 10) : user.password;
+    const hashedTransactionPassword = transactionPassword ? await bcrypt.hash(transactionPassword, 10) : user.transactionPassword;
+
+    // Atualizando usuário
+    const updateUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+            name: name || user.name,
+            email: email || user.email,
+            password: hashedPassword,
+            transactionPassword: hashedTransactionPassword
+        }
+    });
+
+    return updateUser;
+}
+
+export const deleteUser = async (userId: string) => {
+    // Verificando se o usuário existe
+    const user = await prisma.user.findUnique({
+        where: { id: userId }   
+    });
+
+    if (!user) {
+        throw new Error("Usuário não encontrado");
+    };
+
+    const deletedUser = await prisma.user.delete({
+        where: { id: userId }
+    });
+
+    return deletedUser;
+};
 
