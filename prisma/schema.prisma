@@ -16,3 +16,12 @@ model User {
   balance             Float   @default(0.0)
   accountNumber       String  @unique
 }
+
+model Transaction {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  type      String
+  amount    Float
+  timestamp DateTime @default(now())
+  toAccount String?
+}
