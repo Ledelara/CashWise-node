@@ -1,6 +1,5 @@
 import express from 'express';
 import { register, login, editUser, excludeUser } from '../controllers/authController';
-import { addBalance, transferBalance, updateUser, withdraw } from '../services/authService';
 
 const router = express.Router();
 
