@@ -1,5 +1,5 @@
 import express from 'express';
-import { IUser } from '../types/userTypes';
+import { IUser } from '../types/@Types';
 import { deleteUser, updateUser } from '../services/authService';
 
 const router = express.Router();
