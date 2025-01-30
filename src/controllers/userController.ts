@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { addBalance, transferBalance, updateUser, withdraw } from '../services/authService';
 import { createTransaction, getUserStatement } from "../services/transactionsService";
+import { getUserData } from "../services/userProfileService";
 
 export const depositAmount = async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -56,5 +57,16 @@ export const getStatement = async (req: Request, res: Response): Promise<void> =
         res.status(200).json(userStatement);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao obter extrato' });
+    }
+};
+
+export const getUserProfile = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+
+    try {
+        const userData = await getUserData(userId);
+        res.status(200).json(userData);
+    } catch (error: any) {
+        res.status(400).json({ message: error.message });
     }
 };
