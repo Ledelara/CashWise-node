@@ -16,10 +16,11 @@ export const depositAmount = async (req: Request, res: Response) => {
 };
 
 export const transferAmount = async (req: Request, res: Response) => {
-    const { fromUserId, toAccountNumber, amount } = req.body; // Dados da transferência
+    const { id } = req.params;
+    const { toAccountNumber, amount } = req.body;
 
     try {
-        const result = await transferBalance(fromUserId, toAccountNumber, amount);
+        const result = await transferBalance(id, toAccountNumber, amount);
         res.status(200).json(result);
     } catch (error: any) {
         res.status(400).json({ message: error.message });
