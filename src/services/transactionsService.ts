@@ -27,6 +27,7 @@ export const getUserStatement = async (userId: string): Promise<ITransaction[]> 
         type: transaction.type as 'deposit' | 'withdraw' | 'transfer',
         amount: transaction.amount,
         toAccount: transaction.toAccount || undefined,
+        timestamp: transaction.timestamp,
     }));
 };
 
