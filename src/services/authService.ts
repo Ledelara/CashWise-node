@@ -116,7 +116,7 @@ export const deleteUser = async (userId: string) => {
 };
 
 // Função para adicionar saldo
-export const addBalance = async (userId: string, amount: number, transactionPassword: string) => {
+export const addBalance = async (userId: string, amount: number) => {
     if (amount <= 0) {
         throw new Error("O valor deve ser positivo.");
     }
@@ -127,11 +127,6 @@ export const addBalance = async (userId: string, amount: number, transactionPass
 
     if (!user) {
         throw new Error("Usuário não encontrado.");
-    }
-
-    const isTransactionPasswordValid = await bcrypt.compare(transactionPassword, user.transactionPassword);
-    if (!isTransactionPasswordValid) {
-        throw new Error("Senha de transação inválida.");
     }
 
     // Atualizando o saldo do usuário
@@ -153,7 +148,7 @@ export const addBalance = async (userId: string, amount: number, transactionPass
 };
 
 // Função para transferir saldo
-export const transferBalance = async (fromUserId: string, toAccountNumber: string, amount: number, transactionPassword: string) => {
+export const transferBalance = async (fromUserId: string, toAccountNumber: string, amount: number) => {
     if (amount <= 0) {
         throw new Error("O valor da transferência deve ser positivo.");
     }
@@ -164,11 +159,6 @@ export const transferBalance = async (fromUserId: string, toAccountNumber: strin
 
     if (!fromUser) {
         throw new Error("Usuário de origem não encontrado.");
-    }
-
-    const isTransactionPasswordValid = await bcrypt.compare(transactionPassword, fromUser.transactionPassword);
-    if (!isTransactionPasswordValid) {
-        throw new Error("Senha de transação inválida.");
     }
 
     if (fromUser.balance < amount) {
@@ -217,7 +207,7 @@ export const transferBalance = async (fromUserId: string, toAccountNumber: strin
 };
 
 // Função para sacar saldo
-export const withdraw = async (id: string, amount: number, transactionPassword: string) => {
+export const withdraw = async (id: string, amount: number) => {
     // Verificar se o valor do saque é válido
     if (amount <= 0) {
         throw new Error("O valor do saque deve ser maior que zero.");
@@ -230,11 +220,6 @@ export const withdraw = async (id: string, amount: number, transactionPassword: 
 
     if (!user) {
         throw new Error("Usuário não encontrado.");
-    }
-
-    const isTransactionPasswordValid = await bcrypt.compare(transactionPassword, user.transactionPassword);
-    if (!isTransactionPasswordValid) {
-        throw new Error("Senha de transação inválida.");
     }
 
     // Verificar se o saldo é suficiente para o saque

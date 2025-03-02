@@ -5,10 +5,10 @@ import { getUserData } from "../services/userProfileService";
 
 export const depositAmount = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { amount, transactionPassword } = req.body; // amount é o valor que o usuário deseja adicionar ao saldo
+    const { amount } = req.body; // amount é o valor que o usuário deseja adicionar ao saldo
 
     try {
-        const updatedUser = await addBalance(id, amount, transactionPassword);
+        const updatedUser = await addBalance(id, amount);
         res.status(200).json(updatedUser);
     } catch (error: any) {
         res.status(400).json({ message: error.message });
@@ -17,10 +17,10 @@ export const depositAmount = async (req: Request, res: Response) => {
 
 export const transferAmount = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { toAccountNumber, amount, transactionPassword } = req.body;
+    const { toAccountNumber, amount } = req.body;
 
     try {
-        const result = await transferBalance(id, toAccountNumber, amount, transactionPassword);
+        const result = await transferBalance(id, toAccountNumber, amount);
         res.status(200).json(result);
     } catch (error: any) {
         res.status(400).json({ message: error.message });
@@ -29,10 +29,10 @@ export const transferAmount = async (req: Request, res: Response) => {
 
 export const withdrawAmount = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { amount, transactionPassword } = req.body; // Recebendo o valor do saque
+    const { amount } = req.body; // Recebendo o valor do saque
 
     try {
-        const updatedUser = await withdraw(id, amount, transactionPassword);
+        const updatedUser = await withdraw(id, amount);
         res.status(200).json(updatedUser);
     } catch (error: any) {
         res.status(400).json({ message: error.message });
